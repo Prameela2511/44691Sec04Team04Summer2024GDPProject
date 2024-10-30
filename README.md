@@ -11,6 +11,7 @@ Setup Guide for Localhost and HeidiSQL with Visual Studio Code:
 3. Set Up Localhost Server - Ensure relevant platform is installed. In VS Code terminal, start your server. Check http://localhost:<PORT> to confirm it’s running.
 4. Install Heidi SQL and connect to the database in VS Code.
 5. Run and verify.
+   
 Steps to run the project:
 1. Open Visual Studio Code and put the code in the new file.
 2. save the code and then open the terminal and run the below commands for the local host server.
