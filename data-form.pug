@@ -1,0 +1,79 @@
+extends ../../layouts/dashboard
+
+block page 
+    - const hasFileUpload = category.fields.some(field => field.type === "Image" || field.type === "Document")
+    .container-xl
+        form.card(
+            action= `/dashboard/category/${category.id}/data`,
+            method="POST",
+            autocomplete="off"
+            enctype= hasFileUpload ? "multipart/form-data": "application/x-www-form-urlencoded"
+        ) 
+            .card-body
+                    if errors && errors.length !== 0            
+                        .alert.alert-danger.text-start.mb-4
+                            each error in errors
+                                p.mb-0= error
+                    if defaults && defaults.id
+                        input(type="hidden", name="id", value= defaults.id)
+                    each field in category.fields
+                        .mb-3 
+                            if field.type !== "Boolean"
+                                label.form-label(for=field.key)= field.name
+                                if field.type === "Date" || field.type === "Time" || field.type === "DateTime"
+                                    input.input.form-control(
+                                        type= field.inputType,
+                                        id= field.key,
+                                        name= field.key,
+                                        placeholder= `Select ${field.name}`,
+                                        value= defaults && defaults[field.key] ? defaults[field.key] : "",
+                                        required= field.isRequired
+                                    )
+                                else if field.type === "Enum"
+                                    select.form-select(
+                                        name= field.key
+                                        required= field.isRequired
+                                    )
+                                        each option in field.options
+                                            option(
+                                                value= option,
+                                                selected= defaults && defaults[field.key] === option ? true : false
+                                            )= option
+                                else if field.type === "Image" || field.types === "Document"
+                                    input.input.form-control(
+                                        type= "file",
+                                        id= field.key,
+                                        name= field.key,
+                                        accept= field.type === "Image" ? "image/*": "application/pdf",
+                                        required= defaults && defaults.id ? false : field.isRequired
+                                    )
+                                else 
+                                    input.input.form-control(
+                                        type= field.inputType,
+                                        id= field.key,
+                                        name= field.key,
+                                        placeholder= `Enter ${field.name}`,
+                                        value= defaults && defaults[field.key] ? defaults[field.key] : "",
+                                        required= field.isRequired
+                                    )
+                            else 
+                                label.form-check
+                                    input.form-check-input(
+                                        type="checkbox"
+                                        name= field.key
+                                        value= "1"
+                                        checked= defaults && defaults[field.key]
+                                    )
+                                    span.form-check-label #{field.name}
+                    include ../../layouts/extra-fields
+            .card-footer.text-end
+                if category.allowExtraFields
+                    button.btn.me-2(id="addField", type="button") Add Field
+                button.btn.btn-muted(type="submit") #{defaults && defaults.id ? "Update": "Save"}
+                            
+block scripts 
+    script( 
+        src="/scripts/extra.js"
+        type="text/javascript"
+        defer
+    )

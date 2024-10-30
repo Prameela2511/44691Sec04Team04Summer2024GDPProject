@@ -1,0 +1,55 @@
+extends ../layouts/dashboard
+
+block page 
+    .container-xl
+        form.card(
+            action="/dashboard/profile",
+            method="POST",
+            autocomplete="off"
+        ) 
+            .card-body
+                    if errors && errors.length !== 0            
+                        .alert.alert-danger.text-start.mb-4
+                            each error in errors
+                                p.mb-0= error
+                    .mb-3
+                        label.form-label(for="name") Full Name
+                        input.form-control(
+                            type="text",
+                            id="name"
+                            name="name" 
+                            placeholder="Enter your full name"
+                            value= user.name
+                            required
+                        )
+                    .mb-3
+                        label.form-label(for="email") Email Address
+                        input.form-control(
+                            type="email",
+                            id="email"
+                            name="email" 
+                            placeholder="Enter your email address"
+                            value= user.email
+                            required
+                        )
+                    .mb-3
+                        label.form-label(for="password") Password
+                        input.form-control(
+                            type="password",
+                            id="password"
+                            name="password" 
+                            placeholder="Enter your password"
+                        )
+                    .mb-3
+                        label.form-label(for="address") Address
+                        input.form-control(
+                            type="text",
+                            id="address"
+                            name="address" 
+                            placeholder="Enter your address"
+                            value= user.address
+                            required
+                        )
+            .card-footer.text-end
+                button.btn.btn-muted(type="submit") Update Profile
+                            

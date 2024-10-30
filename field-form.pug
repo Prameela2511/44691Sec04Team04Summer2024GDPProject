@@ -1,0 +1,80 @@
+extends ../../layouts/layout
+
+block styles 
+    link(
+        rel="stylesheet", 
+        href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/css/tabler.min.css"
+    )
+
+block content
+    .page.page-center
+        .container.container-tight.py-4
+            .text-center.mb-4
+                a.navbar-brand(href="/")
+                    img(src="/images/logo.svg", alt="Personal Database Management", width="84")
+            form.card.card-md(
+                action="/dashboard/category/field",
+                method="POST"
+                autocomplete="off"
+            )
+                .card-body
+                    h2.card-title.text-center.mb-4  #{category.name} Field
+                    if errors && errors.length !== 0            
+                        .alert.alert-danger.text-start.mb-4
+                            each error in errors
+                                p.mb-0= error
+                    if defaults && defaults.id
+                        input(type="hidden", name="id", value=defaults.id)
+                    input(type="hidden", name="categoryId", value=category.id)
+                    .mb-3
+                        label.form-label(for="name") Field Name
+                        input.form-control(
+                            type="text",
+                            id="name",
+                            name="name",
+                            placeholder="Enter field name",
+                            value= defaults ? defaults.name : "",
+                            required
+                        )
+                    .mb-3
+                        label.form-label(for="type") Field Type
+                        select.form-select(
+                            id="type"
+                            name="type",
+                            required
+                        )
+                            each fieldType in fieldTypes
+                                option(
+                                    value=fieldType.value,
+                                    selected= defaults && defaults.type === fieldType.value
+                                )= fieldType.label
+                    #fieldOptions
+                        if defaults && defaults.options 
+                            if defaults.type === "Enum" && defaults.options
+                                .mb-3
+                                    label.form-label(for="options") Options
+                                    textarea.form-control(
+                                        id="options",
+                                        name="options",
+                                        rows="6",
+                                        placeholder="Enter comma separated list of values",
+                                        required
+                                    )= defaults ? defaults.options : ""
+                    .mb-3 
+                        label.form-check
+                            input.form-check-input(
+                                type="checkbox",
+                                name="isRequired",
+                                value="1", 
+                                checked= defaults && defaults.isRequired
+                            )
+                            span.form-check-label Is Required
+                    .form-footer
+                        button.btn.btn-muted.w-100(type="submit") #{defaults && defaults.id ? "Update" : "Create"}
+
+block scripts 
+    script(src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/js/tabler.min.js")
+    script(
+        src="/scripts/field.js"
+        type="text/javascript"
+    )
