@@ -1,0 +1,31 @@
+header.navbar-expand-md
+    .collapse.navbar-collapse(
+        id="navbar-menu"
+    )
+        .navbar
+            .container-xl
+                .row.flex-fill.align-items-center
+                    .col
+                        .navbar-nav
+                            .nav-item
+                                a.nav-link(href="/dashboard/category/add") 
+                                    span.nav-link-icon.d-md-none.d-lg-inline-block
+                                        i.icon.ti.ti-plus
+                                    span.nav-link-title Add Category
+                            .nav-item
+                                a.nav-link(href="/dashboard") 
+                                    span.nav-link-icon.d-md-none.d-lg-inline-block
+                                        i.icon.ti.ti-home
+                                    span.nav-link-title Home
+                            each cat in categories
+                                .nav-item(
+                                    class= {active: category && cat.id === category.id}
+                                )
+                                    a.nav-link(
+                                        href=`/dashboard/category/${cat.id}/view`
+                                    ) 
+                                        span.nav-link-icon.d-md-none.d-lg-inline-block
+                                            i.icon.ti(
+                                                class= cat.icon
+                                            )
+                                        span.nav-link-title #{cat.name}

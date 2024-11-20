@@ -1,0 +1,71 @@
+extends ../../layouts/dashboard
+
+block actions 
+    .btn-list
+        a.btn.d-none.d-sm-inline-block(href=`/dashboard/category/${category.id}/edit`)
+            i.icon.ti.ti-pencil
+            | Edit
+        a.btn.btn-muted.d-none.d-sm-inline-block(href=`/dashboard/category/${category.id}/data`)
+            i.icon.ti.ti-plus 
+            | Add
+
+block page 
+    if data && data.length !== 0
+        .container-xl
+            .card
+                .card-body.p-0
+                    .table-responsive
+                        table.table
+                            thead
+                                tr
+                                    each field in category.fields 
+                                        th #{field.name}
+                                    th Actions
+                            tbody
+                                each item in data
+                                    tr.align-middle
+                                        each field in category.fields 
+                                            td 
+                                                if field.type === "Boolean"
+                                                    if item.data[field.key] === true
+                                                        i.icon.ti.ti-check.text-success
+                                                else if field.type === "Image" && item.data[field.key]
+                                                    a(href=`/uploads/images/${item.data[field.key]}`, target="_blank")
+                                                        span.avatar(
+                                                            style=`background-image: url('/uploads/images/${item.data[field.key]}')`
+                                                        )
+                                                else if field.type === "Document" && item.data[field.key]
+                                                    a.btn.btn-outline-muted.btn-sm(href=`/dashboard/resource/pdf/${item.data[field.key]}`, target="_blank")
+                                                        i.icon-sm.ti.ti-file-type-pdf.me-1
+                                                        | Document
+                                                else
+                                                    | #{item.data[field.key] ? item.data[field.key] : ""}
+                                        td
+                                            a.btn.btn-outline-muted.btn-sm.me-2(href=`/dashboard/category/${category.id}/data/${item.id}`)
+                                                i.icon-sm.ti.ti-pencil.me-1
+                                                | Edit
+                                            form(
+                                                action=`/dashboard/category/${category.id}/data/delete`, 
+                                                method="POST", 
+                                                class="d-inline"
+                                                onsubmit="return confirm('Are you sure you want to delete this record?');"
+                                            )   
+                                                input(type="hidden", name="id", value=item.id)
+                                                button.btn.btn-outline-danger.btn-sm(type="submit")
+                                                    i.icon-sm.ti.ti-trash.me-1
+                                                    | Delete
+    else
+        .container-xl.my-auto
+            .empty
+                .empty-img
+                    img(
+                        src="/images/empty.svg",
+                        alt="Empty",
+                        style="max-height: 200px;"
+                    )
+                p.empty-title No records found
+                p.empty-subtitle.text-secondary Please add a new record by clicking the button below.
+                .empty-action
+                    a.btn.btn-outline-muted(href=`/dashboard/category/${category.id}/data`)
+                        i.icon.ti.ti-plus
+                        | Add New Record

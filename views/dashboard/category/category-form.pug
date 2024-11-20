@@ -1,0 +1,61 @@
+extends ../../layouts/layout
+
+block styles 
+    link(
+        rel="stylesheet", 
+        href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/css/tabler.min.css"
+    )
+
+block content
+    .page.page-center
+        .container.container-tight.py-4
+            .text-center.mb-4
+                a.navbar-brand(href="/")
+                    img(src="/images/logo.svg", alt="Personal Database Management", width="84")
+            form.card.card-md(
+                action="/dashboard/category/add",
+                method="POST"
+                autocomplete="off"
+            )
+                .card-body
+                    h2.card-title.text-center.mb-4 #{defaults && defaults.id ? "Update category" : "Create new category"}
+                    if errors && errors.length !== 0            
+                        .alert.alert-danger.text-start.mb-4
+                            each error in errors
+                                p.mb-0= error
+                    if defaults && defaults.id
+                        input(type="hidden", name="id", value=defaults.id)
+                    .mb-3
+                        label.form-label(for="name") Category Name
+                        input.form-control(
+                            type="text",
+                            id="name",
+                            name="name",
+                            placeholder="Enter category name",
+                            value= defaults ? defaults.name : "",
+                            required
+                        )
+                    .mb-3
+                        label.form-label(for="maxFields") Number of fields
+                        input.form-control(
+                            type="number",
+                            id="maxFields",
+                            name="maxFields",
+                            placeholder="Enter number of fields",
+                            value= defaults ? defaults.maxFields : "",
+                            required
+                        )
+                    .mb-3
+                        label.form-check
+                            input.form-check-input(
+                                type="checkbox",
+                                name="allowExtraFields",
+                                value="1",
+                                checked= defaults && defaults.allowExtraFields
+                            ) 
+                            span.form-check-label Allow extra fields
+                    .form-footer
+                        button.btn.btn-muted.w-100(type="submit") #{defaults && defaults.id ? "Update" : "Create"}
+
+block scripts 
+  script(src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/js/tabler.min.js")

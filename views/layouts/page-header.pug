@@ -1,0 +1,11 @@
+.page-header.d-print-none    
+    .container-xl        
+        .row.g-2.align-items-center
+            .col 
+                if preTitle 
+                    .page-pretitle #{preTitle}
+                if title 
+                    h2.page-title #{title}
+            .col-auto.ms-auto.d-print-none
+                .btn-list
+                    block actions

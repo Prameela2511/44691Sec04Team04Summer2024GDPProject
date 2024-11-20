@@ -1,0 +1,21 @@
+if defaults && defaults.extras 
+    each val, key in defaults.extras
+        .mb-3
+            label.form-label(for= key) #{key}
+            .input-group.input-group-flat
+                input.form-control(
+                    type="text",
+                    id= key
+                    name= `extra_${key}` 
+                    placeholder= `Enter ${key}`
+                    value= val
+                    required
+                )
+                span.input-group-text
+                    a.link-secondary(
+                        href="#",
+                        data-bs-toggle="tooltip",
+                        aria-label="Delete field",
+                        data-bs-original-title="Delete field"
+                    )
+                        i.icon.ti.ti-trash

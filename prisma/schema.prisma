@@ -1,0 +1,90 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  password   String
+  address    String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  categories Category[]
+
+  @@map("users")
+}
+
+model Category {
+  id               String         @id @default(cuid())
+  name             String
+  maxFields        Int
+  icon             String         @default("ti-category")
+  allowExtraFields Boolean        @default(false)
+  isDefault        Boolean        @default(false)
+  title            String?
+  description      String?        @db.Text
+  cover            String?
+  userId           String
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  fields           Field[]
+  user             User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  categoryData     CategoryData[]
+
+  @@map("categories")
+}
+
+model CategoryData {
+  id         String   @id @default(cuid())
+  categoryId String
+  data       Json
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  category   Category @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("categories_data")
+}
+
+model Field {
+  id         String     @id @default(cuid())
+  name       String
+  key        String
+  type       FieldTypes
+  options    Json       @default("{}")
+  isRequired Boolean    @default(false)
+  categoryId String
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+  category   Category   @relation(fields: [categoryId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+
+  @@map("fields")
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  sid       String   @unique
+  data      String
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("sessions")
+}
+
+enum FieldTypes {
+  Text
+  Number
+  Date
+  Time
+  DateTime
+  Boolean
+  Enum
+  Image
+  Document
+}

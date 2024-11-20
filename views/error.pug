@@ -1,0 +1,21 @@
+extends ./layouts/layout
+
+block styles 
+    link(
+        rel="stylesheet", 
+        href="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/css/tabler.min.css"
+    )
+
+block content
+  .border-top-wide.border-muted.d-flex.flex-column
+    .page.page-center
+      .container-tight.py-4
+        .empty
+          .empty-header #{error.status}
+          .empty-title #{message}
+          .text-start
+            pre 
+              code #{error.stack}
+
+block scripts 
+  script(src="https://cdn.jsdelivr.net/npm/@tabler/core@1.0.0-beta21/dist/js/tabler.min.js")
